@@ -4,9 +4,22 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-    initContentRendering();
+    // 1. Initialize Animations FIRST (so site isn't invisible if data fails)
     initScrollAnimations();
     initStickyNav();
+
+    // 2. Render Content (Safely)
+    if (typeof siteContent !== 'undefined') {
+        try {
+            initContentRendering();
+        } catch (e) {
+            console.error("Content rendering failed:", e);
+        }
+    } else {
+        console.error("siteContent is missing. Check content/siteContent.js");
+        // Fallback: Make things visible if data is missing
+        document.querySelectorAll('.section-reveal').forEach(el => el.classList.add('visible'));
+    }
 });
 
 function initContentRendering() {
